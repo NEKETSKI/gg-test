@@ -8,3 +8,5 @@ To run a unit tests execute `make test` command. This command also starts the Po
 
 ## Running
 Service can be run locally using a `docker compose`. File located in [deployments/compose](https://github.com/NEKETSKY/gg-test/blob/main/deployments/compose/docker-compose.yml).
+
+Link to this repo: https://github.com/NEKETSKY/gg-test
