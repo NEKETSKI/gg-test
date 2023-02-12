@@ -1,0 +1,55 @@
+version: "3.9"
+
+networks:
+  postgres:
+    driver: bridge
+
+services:
+  gg-test:
+    build:
+      context: ../..
+      dockerfile: ./build/Dockerfile
+      args:
+        APP_VERSION: dev
+    networks:
+      - postgres
+    image: neketsky/gg-test:dev
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    container_name: gg-test
+    restart: on-failure
+    environment:
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=postgres
+      - PG_DATABASE=postgres
+      - CHECK_INTERVAL=10s
+      - APP_VERSION=dev
+
+  postgres:
+    networks:
+      - postgres
+    container_name: postgres
+    restart: on-failure
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+
+  migrations:
+    networks:
+      - postgres
+    depends_on:
+      - postgres
+    container_name: migrations
+    restart: on-failure
+    image: migrate/migrate
+    volumes:
+      - ../../migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable", "up" ]

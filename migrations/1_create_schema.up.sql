@@ -1,0 +1,7 @@
+CREATE TABLE status_codes
+(
+    id SERIAL PRIMARY KEY,
+    request VARCHAR(255) NOT NULL,
+    code INTEGER NOT NULL,
+    request_time TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
